@@ -1,3 +1,6 @@
+# www.aithe.dev
+# github.com/aithedev/TikTok-Private-API
+
 import requests
 import secrets
 import hashlib
