@@ -13,6 +13,8 @@ TikToks private mobile API allows developers to access the full range of TikTok'
   + `Edit nickname`
   + `Edit username`
   + `Check username`
++ Algorithms
+  + `X-Gorgon & X-Khronos` [repo](https://github.com/aithedev/X-Gorgon)
 
 ### `⚙️` Setup
 - Star this project or else it wont work
