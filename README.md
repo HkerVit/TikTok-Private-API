@@ -2,7 +2,8 @@
 TikToks private mobile API allows developers to access the full range of TikTok's private mobile API endpoints, providing comprehensive and in-depth functionality for building TikTok-based applications and integrations.
 
 ### `🔥` Features (More to come)
-+ Followers
++ User
+  + `Un/follow a user`
   + `Get followers list`
   + `Get following list`
 + Posts
