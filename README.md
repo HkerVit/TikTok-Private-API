@@ -28,7 +28,7 @@ Contributions, issues and feature requests are welcome!<br/>Feel free to check o
 
 
 ### `❗` Disclaimers
-> **Warning** I'm not responsible for anything that may happen, such as, API Blocking, Account Termination, etc.
+> **Warning** I'm not responsible for anything that may happen, such as, API blocking, account termination, etc.
 > 
 > **Note** This is for educational purposes only.
 
