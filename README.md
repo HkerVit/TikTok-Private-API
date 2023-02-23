@@ -1,5 +1,5 @@
 <h1 align="center">📱 TikTok Private API</h1>
-
+TikToks Private Mobile API allows developers to access the full range of TikTok's private mobile API endpoints, providing comprehensive and in-depth functionality for building TikTok-based applications and integrations.
 
 ### `🔥` Features (More to come)
 + Followers
