@@ -13,7 +13,12 @@ TikToks Private Mobile API allows developers to access the full range of TikTok'
   + `Edit username`
   + `Check username`
 
+### `⚙️` Setup
+- Star this project or else it wont work
+- Run the following command in CMD: `pip install requests`
+- Take a look at `./examples` to know how to use this wrapper
 ***
+
 ### `🤝` Contributing
 
 Contributions, issues and feature requests are welcome!<br/>Feel free to check out the [issues page](https://github.com/aithedev/TikTok-Full-API/issues).
