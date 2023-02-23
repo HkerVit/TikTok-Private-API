@@ -247,7 +247,7 @@ class TikTok:
     def like_video(self, video_id: int, session_id: str) -> dict:
         """
         Makes a post request to like a video.
-        :param user_id: The video id of the video.
+        :param video_id: The video id of the video.
         :param session_id: The session id of your account.
 
         :return: The response (json) after liking the video.
@@ -259,10 +259,59 @@ class TikTok:
     def unlike_video(self, video_id: int, session_id: str) -> dict:
         """
         Makes a post request to unlike a video.
-        :param user_id: The video id of the video.
+        :param video_id: The video id of the video.
         :param session_id: The session id of your account.
 
         :return: The response (json) after unliking the video.
         """
 
         return self.toggle_like(0, video_id, session_id)
+
+
+    def toggle_follow(self, type: int, sec_user_id: int, session_id: str):
+        cookies = f"sessionid={session_id};"
+
+        self.session.params.update(
+            {
+                'city': '',
+                'sec_user_id': sec_user_id, 
+                'from': 0,
+                'from_pre': -1,
+                'enter_from': 'homepage_hot', 
+                'type': type,
+                'channel_id': 3,
+            }
+        )
+        self.session.headers.update({
+            **signature(
+                params = self.query(self.session.params),
+                data = None,
+                cookies = cookies
+            ).get_value(),
+            "cookies": cookies
+        })
+
+        return self.session.post(url = self.api_url + "aweme/v1/commit/follow/user/?").json()
+
+    def follow(self, sec_user_id: str, session_id: str) -> dict:
+        """
+        Makes a post request to follow a user.
+        :param sec_user_id: The sec_user_id of the user.
+        :param session_id: The session id of your account.
+
+        :return: The response (json) after following a user.
+        """
+
+        return self.toggle_follow(1, sec_user_id, session_id)
+
+
+    def unfollow(self, sec_user_id: str, session_id: str) -> dict:
+        """
+        Makes a post request to unfollow a user.
+        :param sec_user_id: The sec_user_id of the user.
+        :param session_id: The session id of your account.
+
+        :return: The response (json) after unfollowing a user.
+        """
+
+        return self.toggle_follow(0, sec_user_id, session_id)
