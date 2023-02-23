@@ -25,12 +25,6 @@
 Contributions, issues and feature requests are welcome!<br/>Feel free to check out the [issues page](https://github.com/aithedev/TikTok-Full-API/issues).
 
 
-### `📝` License
-
-Copyright © 2022 [@aithedev](https://github.com/aithedev).<br/>
-This project is [f](f) licensed.
-
-
 ### `❗` Disclaimers
 > **Warning** I'm not responsible for anything that may happen, such as, API Blocking, Account Termination, etc.
 > 
