@@ -10,7 +10,11 @@ import time
 from utils.signature import signature
 
 class TikTok:
-    def __init__(self) -> None:
+    def __init__(
+        self,
+        session_id: str
+        ) -> None:
+
         self.api_url = "https://api-h2.tiktokv.com/"
         self.session = requests.Session()
         self.headers = {
@@ -24,6 +28,7 @@ class TikTok:
             "x-ss-req-ticket": str(int(time.time() * 1000))
         }
         self.session.headers.update(self.headers)
+        self.session.cookies = f"sessionid={session_id}" if session_id != None else secrets.token_hex(32)
 
         self.params = {
             'manifest_version_code': 190103, 
@@ -82,8 +87,8 @@ class TikTok:
     def cookies_to_session(cookies: str) -> str:
         return cookies.split(";")[13].replace(" ", "")
 
-    def edit_profile(self, choice: str, text: str, user_id: int, session_id: str) -> dict: 
-        cookies = f"sessionid={session_id};"
+    def edit_profile(self, choice: str, text: str, user_id: int) -> dict: 
+
         data = {
             "uid": user_id,
             "page_from": 0,
@@ -96,9 +101,8 @@ class TikTok:
             **signature(
                 params = self.query(self.session.params),
                 data = self.query(data),
-                cookies = cookies
+                cookies = self.session.cookies
             ).get_value(),
-            "cookies": cookies,
             "x-ss-stub": str(hashlib.md5(self.query(data).encode()).hexdigest()).upper()
         })
 
@@ -107,36 +111,33 @@ class TikTok:
             data = data
         ).json()
 
-    def edit_bio(self, bio: str, user_id: int, session_id: str) -> dict:
+    def edit_bio(self, bio: str, user_id: int) -> dict:
         """
         Makes a post request to edit the bio of a user.
         :param bio: The text to set as the bio.
         :param user_id: The user id of the user.
-        :param session_id: The session id of the user.
 
         :return: The response (json) after editing the users bio.
         """
 
-        return self.edit_profile("signature", bio, user_id, session_id)
+        return self.edit_profile("signature", bio, user_id)
 
-    def edit_nickname(self, nickname: str, user_id: int, session_id: str) -> dict:
+    def edit_nickname(self, nickname: str, user_id: int) -> dict:
         """
         Makes a post request to edit the nickname of a user.
         :param nickname: The text to set as the nickname.
         :param user_id: The user id of the user.
-        :param session_id: The session id of the user.
 
         :return: The response (json) after editing the users nickname.
         """
 
-        return self.edit_profile("nickname", bio, user_id, session_id)
+        return self.edit_profile("nickname", bio, user_id)
 
-    def edit_username(self, username: str, user_id: int, session_id: str) -> dict:
+    def edit_username(self, username: str, user_id: int) -> dict:
         """
         Makes a post request to edit the username of a user.
         :param username: The text to set as the username.
         :param user_id: The user id of the user.
-        :param session_id: The session id of the user.
 
         :return: The response (json) after editing the users username.
         """
@@ -146,31 +147,27 @@ class TikTok:
 
     ## Returns blank response, open an issue or pull request if you've found a solution! :)
 
-    def check_username(self, username: str, session_id: str) -> dict:
+    def check_username(self, username: str) -> dict:
         """
         Makes a get request to check a username.
         :param username: The username to check.
-        :param session_id: The session id of your account.
     
         :return: The response (json) after checking the username.
         """
-    
-        cookies = f"sessionid={session_id};"
+
     
         self.session.params.update({"unique_id": username})
         self.session.headers.update({
             **signature(
                 params = self.query(self.params),
                 data = None,
-                cookies = cookies
-            ).get_value(),
-            "cookies": cookies
+                cookies = self.session.cookies
+            ).get_value()
         })
     
         return self.session.post(url = self.api_url + "aweme/v1/unique/id/check/?").json()
 
-    def following_followers(self, choice: str, user_id: int, sec_user_id: str, session_id: str, count: int) -> dict:
-        cookies = f"sessionid={session_id};" if session_id != None else secrets.token_hex(32)
+    def following_followers(self, choice: str, user_id: int, sec_user_id: str, count: int) -> dict:
 
         self.session.params.update(
             {
@@ -187,15 +184,14 @@ class TikTok:
             **signature(
                 params = self.query(self.session.params),
                 data = None,
-                cookies = cookies
-            ).get_value(),
-            "cookies": cookies
+                cookies = self.session.cookies
+            ).get_value()
         })
 
         return self.session.get(url = self.api_url + f"aweme/v1/user/{choice}/list/?").json()
 
 
-    def following_list(self, user_id: int, sec_user_id: str, session_id: str, count: int) -> dict:
+    def following_list(self, user_id: int, sec_user_id: str, count: int) -> dict:
         """
         Makes a get request to get the following list of a user.
         :param user_id: The user id of the user.
@@ -208,7 +204,7 @@ class TikTok:
 
         return self.following_followers("following", user_id, sec_user_id, session_id, count)
 
-    def followers_list(self, user_id: int, sec_user_id: str, session_id: str, count: int) -> dict:
+    def followers_list(self, user_id: int, sec_user_id: str, count: int) -> dict:
         """
         Makes a get request to get the followers list of a user.
         :param user_id: The user id of the user.
@@ -219,11 +215,11 @@ class TikTok:
         :return: The response (json) after retrieving following list of the user. 
         """
 
-        return self.following_followers("followers", user_id, sec_user_id, session_id, count)
+        return self.following_followers("followers", user_id, session_id, count)
 
 
-    def toggle_like(self, type: int, video_id: int, session_id: str):
-        cookies = f"sessionid={session_id};"
+    def toggle_like(self, type: int, video_id: int):
+
 
         self.session.params.update(
             {
@@ -237,30 +233,27 @@ class TikTok:
             **signature(
                 params = self.query(self.session.params),
                 data = None,
-                cookies = cookies
-            ).get_value(),
-            "cookies": cookies
+                cookies = self.session.cookies
+            ).get_value()
         })
 
         return self.session.post(url = self.api_url + "aweme/v1/commit/item/digg/?").json()
 
-    def like_video(self, video_id: int, session_id: str) -> dict:
+    def like_video(self, video_id: int) -> dict:
         """
         Makes a post request to like a video.
         :param video_id: The video id of the video.
-        :param session_id: The session id of your account.
 
         :return: The response (json) after liking the video.
         """
 
-        return self.toggle_like(1, video_id, session_id)
+        return self.toggle_like(1, video_id)
 
 
-    def unlike_video(self, video_id: int, session_id: str) -> dict:
+    def unlike_video(self, video_id: int) -> dict:
         """
         Makes a post request to unlike a video.
         :param video_id: The video id of the video.
-        :param session_id: The session id of your account.
 
         :return: The response (json) after unliking the video.
         """
@@ -268,8 +261,8 @@ class TikTok:
         return self.toggle_like(0, video_id, session_id)
 
 
-    def toggle_follow(self, type: int, sec_user_id: int, session_id: str):
-        cookies = f"sessionid={session_id};"
+    def toggle_follow(self, type: int, sec_user_id: int):
+
 
         self.session.params.update(
             {
@@ -286,32 +279,29 @@ class TikTok:
             **signature(
                 params = self.query(self.session.params),
                 data = None,
-                cookies = cookies
-            ).get_value(),
-            "cookies": cookies
+                cookies = self.session.cookies
+            ).get_value()
         })
 
         return self.session.post(url = self.api_url + "aweme/v1/commit/follow/user/?").json()
 
-    def follow(self, sec_user_id: str, session_id: str) -> dict:
+    def follow(self, sec_user_id: str) -> dict:
         """
         Makes a post request to follow a user.
         :param sec_user_id: The sec_user_id of the user.
-        :param session_id: The session id of your account.
 
         :return: The response (json) after following a user.
         """
 
-        return self.toggle_follow(1, sec_user_id, session_id)
+        return self.toggle_follow(1, sec_user_id)
 
 
-    def unfollow(self, sec_user_id: str, session_id: str) -> dict:
+    def unfollow(self, sec_user_id: str) -> dict:
         """
         Makes a post request to unfollow a user.
         :param sec_user_id: The sec_user_id of the user.
-        :param session_id: The session id of your account.
 
         :return: The response (json) after unfollowing a user.
         """
 
-        return self.toggle_follow(0, sec_user_id, session_id)
+        return self.toggle_follow(0, sec_user_id)
