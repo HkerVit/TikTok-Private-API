@@ -1,9 +1,8 @@
 from api import TikTok
 
-print(TikTok().following_list(
+print(TikTok(session_id = "3e5f47507a3da4915c68c72e359e263c").following_list(
         user_id = 6949066191752561669,
         sec_user_id = "MS4wLjABAAAAzmSxbYOMuhbJvmGDBTYlTYxyXMu7gDScJSi8IpuuoNn7miSgc1NJ_QKhS1Ea157L",
-        session_id = None,
         count = 20
     )
 )
