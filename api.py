@@ -88,7 +88,6 @@ class TikTok:
         return cookies.split(";")[13].replace(" ", "")
 
     def edit_profile(self, choice: str, text: str, user_id: int) -> dict: 
-
         data = {
             "uid": user_id,
             "page_from": 0,
@@ -168,7 +167,6 @@ class TikTok:
         return self.session.post(url = self.api_url + "aweme/v1/unique/id/check/?").json()
 
     def following_followers(self, choice: str, user_id: int, sec_user_id: str, count: int) -> dict:
-
         self.session.params.update(
             {
                 'user_id': user_id, 
@@ -219,8 +217,6 @@ class TikTok:
 
 
     def toggle_like(self, type: int, video_id: int):
-
-
         self.session.params.update(
             {
                 'aweme_id': video_id, 
@@ -262,8 +258,6 @@ class TikTok:
 
 
     def toggle_follow(self, type: int, sec_user_id: int):
-
-
         self.session.params.update(
             {
                 'city': '',
